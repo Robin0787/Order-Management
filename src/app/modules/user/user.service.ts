@@ -1,16 +1,22 @@
-import { User } from "./user.interface";
-import { UserModel } from "./user.model";
+import { TUser } from "./user.interface";
+import { User } from "./user.model";
 
-const createUserToDB = async (studentData: User) => {
-  const result = await UserModel.create(studentData);
-  const removedPasswordResult = await UserModel.findById(result._id).select(
+const createUserToDB = async (studentData: TUser) => {
+  const user = new User(studentData);
+
+  if (await user.isUserExists(studentData.userId)) {
+    throw new Error("User already exists");
+  }
+  const result = await user.save();
+
+  const removedPasswordResult = await User.findById(result._id).select(
     "-password"
   );
   return removedPasswordResult;
 };
 
 const getAllUsersFromDB = async () => {
-  const result = await UserModel.find(
+  const result = await User.find(
     {},
     "userName fullName age email address"
   ).exec();
@@ -18,7 +24,7 @@ const getAllUsersFromDB = async () => {
 };
 
 const getSingleUserFromDB = async (userId: number) => {
-  const result = await UserModel.findOne({ userId: userId });
+  const result = await User.findOne({ userId: userId });
   return result;
 };
 

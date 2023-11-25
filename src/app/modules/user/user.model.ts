@@ -1,18 +1,24 @@
 import { Schema, model } from "mongoose";
-import { Address, FullName, User } from "./user.interface";
+import {
+  TAddress,
+  TFullName,
+  TUser,
+  UserMethods,
+  UserModel,
+} from "./user.interface";
 
-const FullNameSchema = new Schema<FullName>({
+const FullNameSchema = new Schema<TFullName>({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
 });
 
-const AddressSchema = new Schema<Address>({
+const AddressSchema = new Schema<TAddress>({
   street: { type: String, required: true },
   city: { type: String, required: true },
   country: { type: String, required: true },
 });
 
-const UserSchema = new Schema<User>({
+const UserSchema = new Schema<TUser, UserModel, UserMethods>({
   userId: { type: Number, required: true, unique: true },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: false },
@@ -27,4 +33,9 @@ const UserSchema = new Schema<User>({
   },
 });
 
-export const UserModel = model<User>("user", UserSchema);
+UserSchema.methods.isUserExists = async function (userId: number) {
+  const existedUser = await User.findOne({ userId });
+  return existedUser;
+};
+
+export const User = model<TUser, UserModel>("user", UserSchema);
