@@ -3,7 +3,7 @@ import { userServices } from "./user.service";
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body;
+    const userData = req.body;
     const result = await userServices.createUserToDB(userData);
     res.status(200).json({
       success: true,
@@ -36,7 +36,33 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await userServices.getSingleUserFromDB(+userId);
+    if (result) {
+      res.status(200).json({
+        success: true,
+        message: "User retrieved successfully",
+        data: result,
+      });
+    } else {
+      throw new Error("User not found");
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: "User not found!",
+      },
+    });
+  }
+};
+
 export const userControllers = {
   createUser,
   getAllUsers,
+  getSingleUser,
 };

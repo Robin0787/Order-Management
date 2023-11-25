@@ -11,7 +11,7 @@ export interface Address {
 
 export interface User {
   userId: number;
-  userName: string;
+  username: string;
   password: string;
   fullName: FullName;
   age: number;

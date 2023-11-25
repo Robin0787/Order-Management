@@ -13,15 +13,18 @@ const AddressSchema = new Schema<Address>({
 });
 
 const UserSchema = new Schema<User>({
-  userId: { type: Number, required: true },
-  userName: { type: String, required: true },
+  userId: { type: Number, required: true, unique: true },
+  username: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: false },
   fullName: { type: FullNameSchema, required: true },
   age: { type: Number, required: true },
   email: { type: String, required: true },
   isActive: { type: Boolean, required: true },
   hobbies: { type: [String], required: true },
-  address: { type: AddressSchema, required: true },
+  address: {
+    type: AddressSchema,
+    required: true,
+  },
 });
 
 export const UserModel = model<User>("user", UserSchema);
