@@ -71,11 +71,9 @@ const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const userData = req.body;
-    // user data validation using zod library;
-    const zodParsedData = UserValidationSchema.parse(userData);
     const result = await userServices.updateUserInfoFromDB(
       Number(userId),
-      zodParsedData
+      userData
     );
     res.status(200).json({
       success: true,
