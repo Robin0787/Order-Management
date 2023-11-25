@@ -67,6 +67,33 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const userData = req.body;
+    // user data validation using zod library;
+    const zodParsedData = UserValidationSchema.parse(userData);
+    const result = await userServices.updateUserInfoFromDB(
+      Number(userId),
+      zodParsedData
+    );
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully.",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong!",
+      error: {
+        code: 404,
+        description: error,
+      },
+    });
+  }
+};
+
 const deleteUserByUserId = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -92,5 +119,6 @@ export const userControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
+  updateUser,
   deleteUserByUserId,
 };
