@@ -2,13 +2,10 @@ import { TUser } from "./user.interface";
 import { User } from "./user.model";
 
 const createUserToDB = async (studentData: TUser) => {
-  const user = new User(studentData);
-
-  if (await user.isUserExists(studentData.userId)) {
+  if (await User.isUserExists(studentData.userId)) {
     throw new Error("User already exists");
   }
-  const result = await user.save();
-
+  const result = await User.create(studentData);
   const removedPasswordResult = await User.findById(result._id).select(
     "-password"
   );

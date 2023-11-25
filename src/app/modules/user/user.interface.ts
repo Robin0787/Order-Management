@@ -23,8 +23,6 @@ export interface TUser {
   address: TAddress;
 }
 
-export type UserMethods = {
+export interface UserModel extends Model<TUser> {
   isUserExists(userId: number): Promise<TUser | null>;
-};
-
-export type UserModel = Model<TUser, Record<string, never>, UserMethods>;
+}
