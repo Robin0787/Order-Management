@@ -1,10 +1,15 @@
 import { Request, Response } from "express";
 import { userServices } from "./user.service";
+import UserValidationSchema from "./user.validation";
 
 const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
-    const result = await userServices.createUserToDB(userData);
+
+    // user data validation using zod library;
+    const zodParsedData = UserValidationSchema.parse(userData);
+
+    const result = await userServices.createUserToDB(zodParsedData);
     res.status(200).json({
       success: true,
       message: "User created successfully.",
@@ -14,7 +19,10 @@ const createUser = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Something went wrong!",
-      error,
+      error: {
+        code: 404,
+        description: error,
+      },
     });
   }
 };
