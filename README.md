@@ -14,13 +14,13 @@
 
 5 . Then run this command to run the application `npm run start:prod`
 
-### Now go the this address of your browser `localhost://6060` to see the output.
+### Now go the this address of your browser `localhost:6060` to see the output.
 
 #
 
 ## API Requests
 
-1 . Get - `localhost://6060/api/users` = to get all the users information.
+1 . Get - `http://localhost:6060/api/users` = to get all the users information.
 
 2 . Post - `http://localhost:6060/api/users` - to create a new user. Include user information to the request body as below.
 
