@@ -21,7 +21,14 @@ export interface TUser {
   isActive: boolean;
   hobbies: string[];
   address: TAddress;
+  orders?: OrderedItem[];
 }
+
+export type OrderedItem = {
+  productName: string;
+  price: number;
+  quantity: number;
+};
 
 export interface UserModel extends Model<TUser> {
   isUserExists(userId: number): Promise<TUser | null>;
