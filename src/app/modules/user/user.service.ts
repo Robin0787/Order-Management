@@ -45,29 +45,53 @@ const addOrderToUserInDB = async (userId: number, orderedItem: OrderedItem) => {
   if (!(await User.isUserExists(userId))) {
     throw new Error("User doesn't exist");
   }
-  const user: any = await User.findOne({ userId });
-  if (!user.orders) {
-    const result = await User.updateOne(
-      { userId },
-      { $set: { orders: { $push: orderedItem } } }
-    );
-    return result;
-  } else {
-    const result = await User.updateOne(
-      { userId },
-      { $push: { orders: orderedItem } }
-    );
-    return result;
-  }
+  const result = await User.updateOne(
+    { userId },
+    { $push: { orders: orderedItem } }
+  );
+  return result;
 };
 
 const getUserOrdersFromDB = async (userId: number) => {
   if (!(await User.isUserExists(userId))) {
     throw new Error("User doesn't exist");
   }
+  if (!(await User.hasOrder(userId))) {
+    throw new Error("User has no orders");
+  }
   const result = await User.findOne({ userId }, { _id: 0, orders: 1 });
-  // console.log(result);
   return result;
+};
+
+const UserTotalPriceFromDB = async (userId: number) => {
+  if (!(await User.isUserExists(userId))) {
+    throw new Error("User doesn't exist");
+  }
+
+  if (!(await User.hasOrder(userId))) {
+    return { totalPrice: 0 };
+  }
+
+  const result = await User.aggregate([
+    {
+      $match: { userId },
+    },
+    {
+      $unwind: "$orders",
+    },
+    {
+      $group: {
+        _id: "$_id",
+        totalPrice: {
+          $sum: { $multiply: ["$orders.price", "$orders.quantity"] },
+        },
+      },
+    },
+    {
+      $project: { _id: 0 },
+    },
+  ]);
+  return result[0];
 };
 
 export const userServices = {
@@ -78,4 +102,5 @@ export const userServices = {
   deleteUserByUserIdFromDB,
   addOrderToUserInDB,
   getUserOrdersFromDB,
+  UserTotalPriceFromDB,
 };

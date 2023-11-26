@@ -138,7 +138,7 @@ const addOrderToUser = async (req: Request, res: Response) => {
       message: error.message || "Something went wrong",
       error: {
         code: 404,
-        description: error.message || "User not found!",
+        description: error.message || "Something went wrong",
       },
     });
   }
@@ -150,7 +150,7 @@ const getUserOrders = async (req: Request, res: Response) => {
     const result = await userServices.getUserOrdersFromDB(Number(userId));
     res.status(200).json({
       success: true,
-      message: "Order added successfully",
+      message: "User orders retrieved successfully",
       data: result,
     });
   } catch (error: any) {
@@ -159,7 +159,28 @@ const getUserOrders = async (req: Request, res: Response) => {
       message: error.message || "Something went wrong",
       error: {
         code: 404,
-        description: error.message || "User not found!",
+        description: error.message || "Something went wrong",
+      },
+    });
+  }
+};
+
+const getUserOrdersTotalPrice = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await userServices.UserTotalPriceFromDB(Number(userId));
+    res.status(200).json({
+      success: true,
+      message: "Users orders totalPrice calculated successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+      error: {
+        code: 404,
+        description: error.message || "Something went wrong",
       },
     });
   }
@@ -173,4 +194,5 @@ export const userControllers = {
   deleteUserByUserId,
   addOrderToUser,
   getUserOrders,
+  getUserOrdersTotalPrice,
 };

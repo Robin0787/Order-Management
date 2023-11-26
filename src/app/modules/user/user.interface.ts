@@ -32,4 +32,5 @@ export type OrderedItem = {
 
 export interface UserModel extends Model<TUser> {
   isUserExists(userId: number): Promise<TUser | null>;
+  hasOrder(userId: number): Promise<TUser | null>;
 }

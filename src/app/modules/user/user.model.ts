@@ -57,9 +57,17 @@ UserSchema.pre("save", async function (next) {
 });
 
 // creating a custom static method
-UserSchema.statics.isUserExists = async function (userId) {
+UserSchema.statics.isUserExists = async function (userId: number) {
   const existingUser = await User.findOne({ userId });
   return existingUser;
+};
+
+UserSchema.statics.hasOrder = async function (userId: number) {
+  const isUserHasOrder = await User.findOne({
+    userId,
+    orders: { $exists: true, $not: { $size: 0 } },
+  });
+  return !!isUserHasOrder;
 };
 
 export const User = model<TUser, UserModel>("user", UserSchema);
