@@ -8,7 +8,7 @@
 
 2 . Run the command to install all the dependencies `npm install`
 
-3 . Go to the `.env` file and write your `database url`.
+3 . Go to the `.env` file and write your database url to the `DB_URL` field.
 
 4 . Now, write this command to build the application for running `tsc`
 
