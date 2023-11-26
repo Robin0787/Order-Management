@@ -34,11 +34,14 @@ const getAllUsers = async (req: Request, res: Response) => {
       message: "Users retrieved successfully",
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
       message: "Something went wrong!",
-      error,
+      error: {
+        code: 404,
+        description: error.message || "No user found",
+      },
     });
   }
 };
@@ -141,6 +144,27 @@ const addOrderToUser = async (req: Request, res: Response) => {
   }
 };
 
+const getUserOrders = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await userServices.getUserOrdersFromDB(Number(userId));
+    res.status(200).json({
+      success: true,
+      message: "Order added successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+      error: {
+        code: 404,
+        description: error.message || "User not found!",
+      },
+    });
+  }
+};
+
 export const userControllers = {
   createUser,
   getAllUsers,
@@ -148,4 +172,5 @@ export const userControllers = {
   updateUser,
   deleteUserByUserId,
   addOrderToUser,
+  getUserOrders,
 };

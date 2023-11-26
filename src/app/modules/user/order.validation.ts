@@ -15,5 +15,4 @@ const OrderedItemValidationSchema = z.object({
   }),
 });
 
-
 export default OrderedItemValidationSchema;

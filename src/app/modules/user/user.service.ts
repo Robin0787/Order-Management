@@ -61,6 +61,15 @@ const addOrderToUserInDB = async (userId: number, orderedItem: OrderedItem) => {
   }
 };
 
+const getUserOrdersFromDB = async (userId: number) => {
+  if (!(await User.isUserExists(userId))) {
+    throw new Error("User doesn't exist");
+  }
+  const result = await User.findOne({ userId }, { _id: 0, orders: 1 });
+  // console.log(result);
+  return result;
+};
+
 export const userServices = {
   createUserToDB,
   getAllUsersFromDB,
@@ -68,4 +77,5 @@ export const userServices = {
   updateUserInfoFromDB,
   deleteUserByUserIdFromDB,
   addOrderToUserInDB,
+  getUserOrdersFromDB,
 };
